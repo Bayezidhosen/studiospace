@@ -24,14 +24,26 @@ export default function Footer() {
             </p>
 
             <div className="mt-6 flex gap-4">
-              <a href="https://instagram.com" aria-label="Instagram">
-                <Camera />
+              <a
+                href="https://instagram.com"
+                aria-label="Instagram"
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 text-white/70 transition hover:border-[#d5ff3f] hover:text-[#d5ff3f]"
+              >
+                <Camera size={18} />
               </a>
-              <a href="https://youtube.com" aria-label="YouTube">
-                <Play />
+              <a
+                href="https://youtube.com"
+                aria-label="YouTube"
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 text-white/70 transition hover:border-[#d5ff3f] hover:text-[#d5ff3f]"
+              >
+                <Play size={18} />
               </a>
-              <a href="https://x.com" aria-label="X">
-                <span className="text-xl font-bold">𝕏</span>
+              <a
+                href="https://x.com"
+                aria-label="X"
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 text-white/70 transition hover:border-[#d5ff3f] hover:text-[#d5ff3f]"
+              >
+                <span className="text-lg font-bold">𝕏</span>
               </a>
             </div>
           </div>

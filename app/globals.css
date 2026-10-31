@@ -129,6 +129,35 @@
   }
 }
 
+/* StudioSpace custom utilities */
+
+.container-custom {
+  width: 100%;
+  max-width: 80rem;
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+}
+
+.dark-section {
+  background-color: #171717;
+  color: #ffffff;
+}
+
+.dark-section h2,
+.dark-section h3 {
+  color: #ffffff;
+}
+
+.lime-button {
+  background-color: #d5ff3f;
+  color: #171717;
+  transition: background-color 200ms ease;
+}
+
+.lime-button:hover {
+  background-color: #c6f02e;
+}
+
 /* StudioSpace Hero Slider */
 
 .home-hero {

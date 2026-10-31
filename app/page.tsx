@@ -1,16 +1,13 @@
 
 "use client";
 
+import { Suspense } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import {
   ArrowRight,
   ArrowUpRight,
-  Camera,
-  Mic2,
-  Music2,
-  Palette,
-  Clapperboard,
   ShieldCheck,
   BadgeCheck,
   Headphones,
@@ -21,149 +18,8 @@ import {
   Sparkles,
 } from "lucide-react";
 
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay, Pagination, EffectFade } from "swiper/modules";
-
-import "swiper/css";
-import "swiper/css/pagination";
-import "swiper/css/effect-fade";
-
-const slides = [
-  {
-    eyebrow: "YOUR CREATIVE SPACE AWAITS",
-    title: "Make Room for",
-    highlight: "Creativity.",
-    description:
-      "Discover extraordinary studios and turn your next big idea into something unforgettable.",
-    image:
-      "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=2000&q=85",
-  },
-  {
-    eyebrow: "BUILT FOR STORYTELLERS",
-    title: "Create Beyond",
-    highlight: "Limits.",
-    description:
-      "From cinematic production to intimate podcast sessions, find the perfect space for your vision.",
-    image:
-      "https://images.unsplash.com/photo-1492619375914-88005aa9e8fb?auto=format&fit=crop&w=2000&q=85",
-  },
-  {
-    eyebrow: "HOST YOUR CREATIVE SPACE",
-    title: "Your Studio.",
-    highlight: "Your Stage.",
-    description:
-      "Share your creative workspace with a community of creators and unlock its potential.",
-    image:
-      "https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=2000&q=85",
-  },
-];
-
-const studios = [
-  {
-    id: "studio-1",
-    name: "The White Frame Studio",
-    category: "Photo Studio",
-    price: 85,
-    rating: "4.9",
-    location: "New York, NY",
-    image:
-      "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=900&q=85",
-    tag: "MOST POPULAR",
-  },
-  {
-    id: "studio-2",
-    name: "Echo Podcast Lounge",
-    category: "Podcast Room",
-    price: 60,
-    rating: "4.8",
-    location: "Brooklyn, NY",
-    image:
-      "https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&w=900&q=85",
-    tag: "TOP RATED",
-  },
-  {
-    id: "studio-3",
-    name: "The Sound Lab",
-    category: "Music Suite",
-    price: 95,
-    rating: "5.0",
-    location: "Los Angeles, CA",
-    image:
-      "https://images.unsplash.com/photo-1593078166036-9d7b7a5a9c8c?auto=format&fit=crop&w=900&q=85",
-    tag: "PREMIUM",
-  },
-  {
-    id: "studio-4",
-    name: "Monochrome Space",
-    category: "Creative Studio",
-    price: 75,
-    rating: "4.9",
-    location: "Chicago, IL",
-    image:
-      "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=900&q=85",
-    tag: "TRENDING",
-  },
-  {
-    id: "studio-5",
-    name: "Frame One Production",
-    category: "Film Stage",
-    price: 120,
-    rating: "4.9",
-    location: "Austin, TX",
-    image:
-      "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=85",
-    tag: "PRO CHOICE",
-  },
-  {
-    id: "studio-6",
-    name: "The Creative Corner",
-    category: "Art Workshop",
-    price: 55,
-    rating: "4.7",
-    location: "Seattle, WA",
-    image:
-      "https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=900&q=85",
-    tag: "NEW SPACE",
-  },
-];
-
-const categories = [
-  {
-    name: "Photo Studios",
-    count: "120+ Spaces",
-    icon: Camera,
-    image:
-      "https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=700&q=85",
-  },
-  {
-    name: "Sound Stages",
-    count: "85+ Spaces",
-    icon: Clapperboard,
-    image:
-      "https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&w=700&q=85",
-  },
-  {
-    name: "Podcast Rooms",
-    count: "60+ Spaces",
-    icon: Mic2,
-    image:
-      "https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&w=700&q=85",
-  },
-  {
-    name: "Music Suites",
-    count: "95+ Spaces",
-    icon: Music2,
-    image:
-      "https://images.unsplash.com/photo-1593078166036-9d7b7a5a9c8c?auto=format&fit=crop&w=700&q=85",
-  },
-  {
-    name: "Art Workshops",
-    count: "45+ Spaces",
-    icon: Palette,
-    image:
-      "https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=700&q=85",
-  },
-];
+import HeroSlider from "@/components/home/hero-slider";
+import { studios, slides, categories } from "@/lib/data/studios";
 
 const bookingSteps = [
   {
@@ -175,8 +31,7 @@ const bookingSteps = [
   {
     number: "02",
     title: "Select Shoot Hours",
-    description:
-      "Choose your preferred date, time and booking duration.",
+    description: "Choose your preferred date, time and booking duration.",
   },
   {
     number: "03",
@@ -197,93 +52,37 @@ const fadeUp = {
   visible: { opacity: 1, y: 0 },
 };
 
+/* Static first-slide shell rendered while the slider hydrates. */
+function HeroFallback() {
+  return (
+    <section className="dark-section relative">
+      <div
+        className="relative flex min-h-[650px] items-center bg-cover bg-center md:min-h-[730px]"
+        style={{ backgroundImage: `url(${slides[0].image})` }}
+      >
+        <div className="absolute inset-0 bg-gradient-to-r from-black via-black/75 to-black/20" />
+        <div className="container-custom relative z-10 py-28">
+          <h1 className="text-5xl font-black leading-[1.05] tracking-tight text-white sm:text-6xl lg:text-8xl">
+            {slides[0].title}
+            <br />
+            <span className="text-[#d5ff3f]">{slides[0].highlight}</span>
+          </h1>
+          <p className="mt-7 max-w-xl text-base leading-8 text-white/70 md:text-lg">
+            {slides[0].description}
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export default function Home() {
   return (
     <main className="overflow-hidden">
-
       {/* HERO SLIDER */}
-      <section className="dark-section relative">
-        <Swiper
-          modules={[Autoplay, Pagination, EffectFade]}
-          effect="fade"
-          autoplay={{
-            delay: 5000,
-            disableOnInteraction: false,
-          }}
-          pagination={{ clickable: true }}
-          loop
-          className="home-hero"
-        >
-          {slides.map((slide, index) => (
-            <SwiperSlide key={index}>
-              <div
-                className="relative flex min-h-[650px] items-center bg-cover bg-center md:min-h-[730px]"
-                style={{
-                  backgroundImage: `url(${slide.image})`,
-                }}
-              >
-                <div className="absolute inset-0 bg-gradient-to-r from-black via-black/75 to-black/20" />
-                <div className="container-custom relative z-10 py-28">
-                  <motion.div
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true }}
-                    variants={fadeUp}
-                    transition={{ duration: 0.8 }}
-                    className="max-w-3xl"
-                  >
-                    <div className="mb-7 flex items-center gap-3">
-                      <span className="h-[2px] w-10 bg-[#d5ff3f]" />
-                      <span className="text-xs font-bold tracking-[0.25em] text-[#d5ff3f]">
-                        {slide.eyebrow}
-                      </span>
-                    </div>
-
-                    <h1 className="text-5xl font-black leading-[1.05] tracking-tight text-white sm:text-6xl lg:text-8xl">
-                      {slide.title}
-                      <br />
-                      <span className="text-[#d5ff3f]">
-                        {slide.highlight}
-                      </span>
-                    </h1>
-
-                    <p className="mt-7 max-w-xl text-base leading-8 text-white/70 md:text-lg">
-                      {slide.description}
-                    </p>
-
-                    <div className="mt-10 flex flex-wrap gap-4">
-                      <Link
-                        href="/studios"
-                        className="lime-button flex items-center gap-3 rounded-full px-7 py-4 text-sm font-bold"
-                      >
-                        Explore Studios <ArrowUpRight size={18} />
-                      </Link>
-
-                      <Link
-                        href="/register"
-                        className="rounded-full border border-white/40 px-7 py-4 text-sm font-bold text-white transition hover:bg-white hover:text-black"
-                      >
-                        Host Your Space
-                      </Link>
-                    </div>
-                  </motion.div>
-                </div>
-
-                <div className="absolute bottom-12 right-10 z-10 hidden text-right text-white/60 md:block">
-                  <p className="text-xs tracking-widest">CREATIVITY STARTS HERE</p>
-                  <p className="mt-2 text-2xl font-bold text-white">
-                    01 / 03
-                  </p>
-                </div>
-              </div>
-            </SwiperSlide>
-          ))}
-        </Swiper>
-
-        <div className="absolute bottom-0 left-0 z-20 h-1 w-full bg-white/10">
-          <div className="h-full w-1/3 bg-[#d5ff3f]" />
-        </div>
-      </section>
+      <Suspense fallback={<HeroFallback />}>
+        <HeroSlider />
+      </Suspense>
 
       {/* STATS */}
       <section className="border-b border-black/10 bg-white">
@@ -345,10 +144,12 @@ export default function Home() {
               className="group overflow-hidden rounded-2xl border border-black/10 bg-white transition duration-300 hover:-translate-y-2 hover:shadow-xl"
             >
               <div className="relative h-64 overflow-hidden">
-                <img
+                <Image
                   src={studio.image}
                   alt={studio.name}
-                  className="h-full w-full object-cover transition duration-700 group-hover:scale-110"
+                  fill
+                  sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                  className="object-cover transition duration-700 group-hover:scale-110"
                 />
 
                 <span className="absolute left-4 top-4 rounded-full bg-[#d5ff3f] px-3 py-2 text-[10px] font-black tracking-wider text-black">
@@ -366,9 +167,7 @@ export default function Home() {
                   {studio.category}
                 </span>
 
-                <h3 className="mt-2 text-xl font-bold">
-                  {studio.name}
-                </h3>
+                <h3 className="mt-2 text-xl font-bold">{studio.name}</h3>
 
                 <p className="mt-3 flex items-center gap-2 text-sm text-neutral-500">
                   <MapPin size={15} />
@@ -428,12 +227,13 @@ export default function Home() {
                     href={`/studios?category=${encodeURIComponent(category.name)}`}
                     className="group relative block h-72 overflow-hidden rounded-2xl"
                   >
-                    <img
+                    <Image
                       src={category.image}
                       alt={category.name}
-                      className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-110"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
+                      fill
+                      sizes="(min-width: 1024px) 20vw, (min-width: 640px) 50vw, 100vw"
+                      className="object-cover transition duration-700 group-hover:scale-110"
+                    />                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
 
                     <div className="absolute bottom-0 p-5">
                       <Icon className="mb-5 text-[#d5ff3f]" size={26} />
@@ -607,7 +407,7 @@ export default function Home() {
           </span>
 
           <h2 className="mx-auto mt-5 max-w-3xl text-4xl font-black leading-tight text-white md:text-7xl">
-            Don't just imagine it.
+            Don&apos;t just imagine it.
             <span className="text-[#d5ff3f]"> Create it.</span>
           </h2>
 
@@ -624,7 +424,6 @@ export default function Home() {
           </Link>
         </motion.div>
       </section>
-
     </main>
   );
 }

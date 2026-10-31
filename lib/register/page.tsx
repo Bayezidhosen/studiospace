@@ -4,7 +4,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { signIn, signUp } from "@/lib/auth-client";
+import { signIn, signUp } from "../auth-client";
 import { toast } from "sonner";
 import {
   Aperture,
