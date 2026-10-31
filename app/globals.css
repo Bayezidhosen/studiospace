@@ -128,3 +128,36 @@
     @apply font-sans;
   }
 }
+
+/* StudioSpace Hero Slider */
+
+.home-hero {
+  width: 100%;
+}
+
+.home-hero .swiper-pagination {
+  bottom: 35px !important;
+  text-align: left;
+  padding-left: max(20px, calc((100% - 1280px) / 2));
+}
+
+.home-hero .swiper-pagination-bullet {
+  width: 28px;
+  height: 5px;
+  border-radius: 10px;
+  background: white;
+  opacity: 0.4;
+}
+
+.home-hero .swiper-pagination-bullet-active {
+  width: 45px;
+  background: #d5ff3f;
+  opacity: 1;
+}
+
+@media (max-width: 640px) {
+  .home-hero .swiper-pagination {
+    bottom: 25px !important;
+    padding-left: 20px;
+  }
+}
