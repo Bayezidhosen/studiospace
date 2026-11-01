@@ -1,5 +1,6 @@
 
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
@@ -14,17 +15,13 @@ import {
 } from "lucide-react";
 
 import BookButton from "@/components/studio/book-button";
-import { studios } from "@/lib/data/studios";
+import { getStudioById, getStudioReviews } from "@/lib/mongo";
 
 type Params = { params: Promise<{ id: string }> };
 
-export function generateStaticParams() {
-  return studios.map((studio) => ({ id: studio.id }));
-}
-
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { id } = await params;
-  const studio = studios.find((item) => item.id === id);
+  const studio = await getStudioById(id);
 
   if (!studio) return {};
 
@@ -34,9 +31,20 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   };
 }
 
-export default async function StudioDetailPage({ params }: Params) {
+export default function StudioDetailPage({ params }: Params) {
+  return (
+    <Suspense
+      fallback={<div className="min-h-[80vh] bg-[#f5f5f0] animate-pulse" />}
+    >
+      <StudioDetails params={params} />
+    </Suspense>
+  );
+}
+
+async function StudioDetails({ params }: Params) {
   const { id } = await params;
-  const studio = studios.find((item) => item.id === id);
+  const studio = await getStudioById(id);
+  const reviews = studio ? await getStudioReviews(id) : [];
 
   if (!studio) {
     notFound();
@@ -111,6 +119,40 @@ export default async function StudioDetailPage({ params }: Params) {
                   </li>
                 ))}
               </ul>
+
+              {reviews.length > 0 && (
+                <>
+                  <h2 className="mt-10 text-lg font-bold">
+                    What creators say
+                  </h2>
+
+                  <ul className="mt-4 space-y-4">
+                    {reviews.map((review) => (
+                      <li
+                        key={review.id}
+                        className="rounded-2xl border border-black/10 p-5"
+                      >
+                        <div className="flex items-center justify-between gap-3">
+                          <span className="text-sm font-bold">
+                            {review.userName}
+                          </span>
+                          <span className="flex items-center gap-1 text-xs font-bold">
+                            <Star
+                              size={13}
+                              className="fill-yellow-400 text-yellow-400"
+                            />
+                            {review.rating}
+                          </span>
+                        </div>
+
+                        <p className="mt-2 text-sm leading-6 text-neutral-600">
+                          {review.comment}
+                        </p>
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              )}
             </div>
           </div>
 
@@ -140,7 +182,7 @@ export default async function StudioDetailPage({ params }: Params) {
               </div>
 
               <div className="mt-6">
-                <BookButton studioName={studio.name} />
+                <BookButton studio={studio} />
               </div>
 
               <p className="mt-4 text-center text-xs text-neutral-500">

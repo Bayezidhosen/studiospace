@@ -23,7 +23,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [googleLoading, setGoogleLoading] = useState(false);
+  // const [googleLoading, setLoading] = useState(false);
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -58,7 +58,8 @@ export default function LoginPage() {
 
   const handleGoogleLogin = async () => {
     try {
-      setGoogleLoading(true);
+      // setLoading(true);
+      setLoading(false);
 
       await signIn.social({
         provider: "google",
@@ -66,7 +67,9 @@ export default function LoginPage() {
       });
     } catch {
       toast.error("Google login failed. Please try again.");
-      setGoogleLoading(false);
+      // setLoading(false);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -123,10 +126,10 @@ export default function LoginPage() {
             <button
               type="button"
               onClick={handleGoogleLogin}
-              disabled={googleLoading || loading}
+              disabled={ loading}
               className="mt-8 flex w-full items-center justify-center gap-3 rounded-xl border border-neutral-200 px-5 py-3.5 text-sm font-semibold transition hover:bg-neutral-50 disabled:cursor-not-allowed disabled:opacity-60"
             >
-              {googleLoading ? (
+              {loading ? (
                 <Loader2 className="h-5 w-5 animate-spin" />
               ) : (
                 <svg viewBox="0 0 48 48" className="h-5 w-5" aria-hidden="true">
@@ -196,7 +199,7 @@ export default function LoginPage() {
 
               <button
                 type="submit"
-                disabled={loading || googleLoading}
+                disabled={loading}
                 className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#d5ff3f] px-5 py-4 text-sm font-bold text-[#171717] transition hover:bg-[#c6f02e] disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {loading ? (

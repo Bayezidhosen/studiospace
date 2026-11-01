@@ -1,7 +1,7 @@
 
 "use client";
 
-import { Suspense } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
@@ -19,7 +19,12 @@ import {
 } from "lucide-react";
 
 import HeroSlider from "@/components/home/hero-slider";
-import { studios, slides, categories } from "@/lib/data/studios";
+import {
+  studios as fallbackStudios,
+  slides,
+  categories,
+} from "@/lib/data/studios";
+import type { Studio } from "@/lib/data/studios";
 
 const bookingSteps = [
   {
@@ -52,6 +57,35 @@ const fadeUp = {
   visible: { opacity: 1, y: 0 },
 };
 
+/**
+ * Featured studios are collected from MongoDB (via /api/studios).
+ * Starts from the bundled fallback so the grid renders before fetch completes.
+ */
+function useDbStudios(): Studio[] {
+  const [studios, setStudios] = useState<Studio[]>(fallbackStudios);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    fetch("/api/studios")
+      .then((response) => response.json())
+      .then((data) => {
+        if (!cancelled && Array.isArray(data) && data.length > 0) {
+          setStudios(data);
+        }
+      })
+      .catch(() => {
+        /* keep fallback data */
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  return studios;
+}
+
 /* Static first-slide shell rendered while the slider hydrates. */
 function HeroFallback() {
   return (
@@ -77,6 +111,8 @@ function HeroFallback() {
 }
 
 export default function Home() {
+  const studios = useDbStudios();
+
   return (
     <main className="overflow-hidden">
       {/* HERO SLIDER */}

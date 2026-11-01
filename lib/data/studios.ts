@@ -19,6 +19,8 @@ export type Studio = {
   tag: string;
   description: string;
   features: string[];
+  deposit?: number;
+  hostName?: string;
 };
 
 export const studios: Studio[] = [

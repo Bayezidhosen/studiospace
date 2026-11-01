@@ -5,7 +5,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowUpRight, MapPin, SearchX, Star } from "lucide-react";
 
-import { studios, categories } from "@/lib/data/studios";
+import { categories, studios as fallbackStudios, type Studio } from "@/lib/data/studios";
+import { getStudios } from "@/lib/mongo";
 
 export const metadata: Metadata = {
   title: "Explore Studios | StudioSpace",
@@ -21,7 +22,7 @@ const normalize = (value: string) =>
     .filter(Boolean)
     .join(" ");
 
-function StudioCard({ studio }: { studio: (typeof studios)[number] }) {
+function StudioCard({ studio }: { studio: Studio }) {
   return (
     <article className="group overflow-hidden rounded-2xl border border-black/10 bg-white transition duration-300 hover:-translate-y-2 hover:shadow-xl">
       <div className="relative h-64 overflow-hidden">
@@ -83,6 +84,7 @@ async function StudioResults({
   searchParamsParams: Promise<{ category?: string }>;
 }) {
   const { category } = await searchParamsParams;
+  const studios = await getStudios();
 
   const activeQuery = category?.trim() || "";
   const activeCategory = categories.find(
@@ -157,7 +159,7 @@ async function StudioResults({
 function ResultsFallback() {
   return (
     <div className="grid gap-7 sm:grid-cols-2 lg:grid-cols-3">
-      {studios.map((studio) => (
+      {fallbackStudios.map((studio) => (
         <StudioCard key={studio.id} studio={studio} />
       ))}
     </div>

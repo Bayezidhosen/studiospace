@@ -1,13 +1,13 @@
-
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Aperture,
   Menu,
   X,
   ArrowUpRight,
+  CalendarCheck,
 } from "lucide-react";
 
 const navLinks = [
@@ -19,6 +19,43 @@ const navLinks = [
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+  const [bookingCount, setBookingCount] = useState<number | null>(null);
+
+  /* Booking record count collected from MongoDB for the logged-in user. */
+  useEffect(() => {
+    let cancelled = false;
+
+    fetch("/api/bookings")
+      .then((response) => response.json())
+      .then((data) => {
+        if (!cancelled && data?.authenticated && Array.isArray(data.bookings)) {
+          const active = data.bookings.filter(
+            (booking: { status?: string }) =>
+              booking.status && booking.status !== "cancelled"
+          );
+          setBookingCount(active.length);
+        }
+      })
+      .catch(() => {
+        /* Navbar works without booking data */
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const BookingLabel = () => (
+    <span className="flex items-center gap-1.5">
+      <CalendarCheck size={15} />
+      My Bookings
+      {bookingCount !== null && bookingCount > 0 && (
+        <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-[#d5ff3f] px-1.5 text-[11px] font-black text-black">
+          {bookingCount}
+        </span>
+      )}
+    </span>
+  );
 
   return (
     <header className="sticky top-0 z-50 border-b border-black/10 bg-[#f5f5f0]/90 backdrop-blur-xl">
@@ -46,6 +83,13 @@ export default function Navbar() {
         </div>
 
         <div className="hidden items-center gap-3 md:flex">
+          <Link
+            href="/bookings"
+            className="flex items-center px-3 py-3 text-sm font-semibold text-neutral-700 transition hover:text-black"
+          >
+            <BookingLabel />
+          </Link>
+
           <Link
             href="/login"
             className="px-4 py-3 text-sm font-semibold"
@@ -84,6 +128,14 @@ export default function Navbar() {
                 {link.name}
               </Link>
             ))}
+
+            <Link
+              href="/bookings"
+              onClick={() => setOpen(false)}
+              className="flex font-semibold"
+            >
+              <BookingLabel />
+            </Link>
 
             <Link
               href="/login"
