@@ -1,7 +1,8 @@
 import { MongoClient } from "mongodb";
+import "./load-env.mjs";
 
 const client = new MongoClient(
-  "mongodb+srv://studioSpace:ndgH3kYjTZVV3loK@cluster0.oscwqjb.mongodb.net/"
+  process.env.MONGODB_URI
 );
 
 try {

@@ -1,4 +1,5 @@
 import { MongoClient } from "mongodb";
+import "./load-env.mjs";
 
 /**
  * One-time migration: the seeded `studios` documents still point to
@@ -25,7 +26,7 @@ const IMAGES = {
 const FALLBACK = IMAGES["Creative Studio"];
 
 const client = new MongoClient(
-  "mongodb+srv://studioSpace:ndgH3kYjTZVV3loK@cluster0.oscwqjb.mongodb.net/"
+  process.env.MONGODB_URI
 );
 
 try {
