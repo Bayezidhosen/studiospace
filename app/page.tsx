@@ -269,7 +269,7 @@ export default function Home() {
                       fill
                       sizes="(min-width: 1024px) 20vw, (min-width: 640px) 50vw, 100vw"
                       className="object-cover transition duration-700 group-hover:scale-110"
-                    />                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
+                    />                    <div className="absolute inset-0 bg-linear-to-t from-black via-black/20 to-transparent" />
 
                     <div className="absolute bottom-0 p-5">
                       <Icon className="mb-5 text-[#d5ff3f]" size={26} />
