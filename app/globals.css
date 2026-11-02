@@ -2,8 +2,13 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
+/* Tailwind CSS v4 directive; allow this custom at-rule in Stylelint. */
+/* stylelint-disable at-rule-no-unknown */
 @custom-variant dark (&:is(.dark *));
+/* stylelint-enable at-rule-no-unknown */
 
+/* Tailwind CSS v4 directive; allow this custom at-rule in Stylelint. */
+/* stylelint-disable at-rule-no-unknown */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -47,6 +52,7 @@
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
 }
+/* stylelint-enable at-rule-no-unknown */
 
 :root {
   --background: oklch(1 0 0);
