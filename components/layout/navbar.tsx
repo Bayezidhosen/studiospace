@@ -101,7 +101,7 @@ export default function Navbar() {
             href="/register"
             className="lime-button flex items-center gap-2 rounded-full px-5 py-3 text-sm font-bold"
           >
-            Get Started <ArrowUpRight size={17} />
+            Register <ArrowUpRight size={17} />
           </Link>
         </div>
 

@@ -128,7 +128,7 @@ export default function RegisterPage() {
             </Link>
 
             <p className="text-sm font-semibold uppercase tracking-[0.2em] text-neutral-400">
-              Get started
+              Register
             </p>
 
             <h2 className="mt-3 text-3xl font-bold tracking-tight">
