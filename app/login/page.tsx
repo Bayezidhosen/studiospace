@@ -76,7 +76,7 @@ export default function LoginPage() {
   return (
     <main className="min-h-[85vh] bg-[#f5f5f0] px-4 py-12 text-[#171717]">
       <div className="mx-auto grid max-w-6xl overflow-hidden rounded-3xl bg-white shadow-xl md:grid-cols-2">
-        <section className="relative hidden min-h-[650px] flex-col justify-between overflow-hidden bg-[#171717] p-12 text-white md:flex">
+        <section className="relative hidden min-h-162.5 flex-col justify-between overflow-hidden bg-[#171717] p-12 text-white md:flex">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(213,255,63,0.22),transparent_35%)]" />
 
           <Link href="/" className="relative z-10 flex items-center gap-2 text-xl font-bold">
