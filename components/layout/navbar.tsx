@@ -151,9 +151,10 @@ export default function Navbar() {
         if (cancelled) return;
 
         if (data?.authenticated && Array.isArray(data.bookings)) {
+          /* Case-insensitive, matching the API's own cancelled filter. */
           const active = data.bookings.filter(
             (booking: { status?: string }) =>
-              booking.status && booking.status !== "cancelled",
+              (booking.status || "pending").toLowerCase() !== "cancelled",
           );
           setBookingCount(active.length);
         } else {

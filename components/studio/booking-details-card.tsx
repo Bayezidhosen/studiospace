@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 
 import type { Booking } from "@/lib/mongo";
+import { isOptimizableImage } from "@/lib/image";
 
 const statusStyles: Record<string, string> = {
   pending: "bg-amber-100 text-amber-800",
@@ -65,6 +66,7 @@ export default function BookingDetailsCard({
             alt={booking.studioTitle}
             fill
             sizes="(min-width: 1024px) 400px, 100vw"
+            unoptimized={!isOptimizableImage(booking.imageUrl)}
             className="object-cover"
           />
         ) : null}

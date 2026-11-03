@@ -21,6 +21,8 @@ export default function BookButton({ studio }: { studio: Studio }) {
       </button>
 
       <BookingFlow
+        /* Remount on every open so the booking form always starts clean. */
+        key={open ? "open" : "closed"}
         open={open}
         onClose={() => setOpen(false)}
         studio={studio}

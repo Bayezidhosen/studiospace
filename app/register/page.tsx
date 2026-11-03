@@ -27,7 +27,7 @@ export default function RegisterPage() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  // const [googleLoading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
 
   const isValidPassword =
     password.length >= 6 &&
@@ -76,8 +76,7 @@ export default function RegisterPage() {
 
   const handleGoogleRegister = async () => {
     try {
-      // setLoading(true);
-      setLoading(true);
+      setGoogleLoading(true);
 
       await signIn.social({
         provider: "google",
@@ -85,8 +84,8 @@ export default function RegisterPage() {
       });
     } catch {
       toast.error("Google registration failed.");
-    } finally {
-      setLoading(false); }
+      setGoogleLoading(false);
+    }
   };
 
   return (
@@ -142,10 +141,10 @@ export default function RegisterPage() {
             <button
               type="button"
               onClick={handleGoogleRegister}
-              disabled={loading}
+              disabled={googleLoading}
               className="mt-7 flex w-full items-center justify-center gap-3 rounded-xl border border-neutral-200 px-5 py-3.5 text-sm font-semibold transition hover:bg-neutral-50 disabled:cursor-not-allowed disabled:opacity-60"
             >
-              {loading ? (
+              {googleLoading ? (
                 <Loader2 className="h-5 w-5 animate-spin" />
               ) : (
                 <svg viewBox="0 0 48 48" className="h-5 w-5" aria-hidden="true">
@@ -255,7 +254,7 @@ export default function RegisterPage() {
 
               <button
                 type="submit"
-                disabled={loading }
+                disabled={loading}
                 className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#d5ff3f] px-5 py-4 text-sm font-bold text-[#171717] transition hover:bg-[#c6f02e] disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {loading ? (

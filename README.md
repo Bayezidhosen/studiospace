@@ -62,36 +62,37 @@ From photography studios and film stages to podcast rooms and music recording su
 
 ```text
 studiospace/
-├── public/
-│
-├── src/
-│   ├── app/
-│   │   ├── api/
-│   │   │   ├── auth/
-│   │   │   ├── bookings/
-│   │   │   └── studios/
-│   │   │
-│   │   ├── login/
-│   │   ├── register/
-│   │   ├── dashboard/
-│   │   │   └── listings/
-│   │   ├── bookings/
-│   │   ├── studios/
-│   │   │   └── [id]/
-│   │   ├── layout.tsx
-│   │   └── page.tsx
+├── app/
+│   ├── api/
+│   │   ├── auth/[...all]/
+│   │   ├── bookings/[id]/
+│   │   └── studios/
 │   │
-│   ├── components/
-│   │   ├── layout/
-│   │   ├── studios/
-│   │   ├── bookings/
-│   │   └── ui/
-│   │
-│   └── lib/
-│       ├── auth.ts
-│       ├── auth-client.ts
-│       └── mongo.ts
+│   ├── login/
+│   ├── register/
+│   ├── dashboard/
+│   │   └── listings/
+│   ├── bookings/
+│   ├── studios/
+│   │   ├── [id]/
+│   │   └── new/
+│   ├── layout.tsx
+│   └── page.tsx
 │
+├── components/
+│   ├── home/
+│   ├── layout/
+│   ├── studio/
+│   └── ui/
+│
+├── lib/
+│   ├── auth.ts
+│   ├── auth-client.ts
+│   ├── db-config.ts
+│   ├── mongo.ts
+│   └── use-require-session.ts
+│
+├── scripts/          # maintenance / QA utilities (npm run db:check)
 ├── .env.example
 ├── .gitignore
 ├── package.json
@@ -146,6 +147,22 @@ GOOGLE_CLIENT_SECRET=YOUR_GOOGLE_CLIENT_SECRET
 ```
 
 **Important:** Use the exact environment variable names configured in your source code. Never commit `.env.local` or expose database credentials or OAuth secrets on GitHub.
+
+### Google OAuth Redirect Setup (Google Cloud Console)
+
+For social login, register these URLs under **APIs & Services → Credentials → OAuth 2.0 Client**:
+
+- **Authorized JavaScript origins:** `http://localhost:3000` and your production URL (e.g. `https://your-app.vercel.app`)
+- **Authorized redirect URI:** `https://your-app/api/auth/callback/google`
+  (locally: `http://localhost:3000/api/auth/callback/google`)
+
+### Verifying the MongoDB connection
+
+```bash
+npm run db:check
+```
+
+This prints the connection status, database name and collection counts. **It never prints credentials.** A common mistake it detects: the Atlas tutorial URI uses the placeholder host `cluster.mongodb.net` — a real connection string always looks like `mongodb+srv://user:pass@cluster0.xxxxx.mongodb.net/...`.
 
 ### 5. Run the Development Server
 

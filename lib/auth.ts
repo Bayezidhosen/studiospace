@@ -3,6 +3,12 @@ import { betterAuth } from "better-auth";
 import { mongodbAdapter } from "@better-auth/mongo-adapter";
 import { MongoClient, type Db } from "mongodb";
 
+import {
+  assertRealMongoHost,
+  getDatabaseName,
+  validateMongoUri,
+} from "@/lib/db-config";
+
 /**
  * MongoDB is initialized lazily, on first runtime use — never at module
  * import / build time:
@@ -21,6 +27,16 @@ const globalForMongo = globalThis as unknown as {
   studiospaceAuthMongo?: { client: MongoClient; database: Db };
 };
 
+/**
+ * Google OAuth is only wired up when BOTH credentials are configured.
+ * Previously the provider was always registered with `undefined` values,
+ * so clicking "Continue with Google" failed deep inside the library with
+ * a confusing error when the env vars were missing.
+ */
+const googleConfigured =
+  Boolean(process.env.GOOGLE_CLIENT_ID) &&
+  Boolean(process.env.GOOGLE_CLIENT_SECRET);
+
 function getMongoConnection(): { client: MongoClient; database: Db } {
   if (globalForMongo.studiospaceAuthMongo) {
     return globalForMongo.studiospaceAuthMongo;
@@ -28,21 +44,16 @@ function getMongoConnection(): { client: MongoClient; database: Db } {
 
   const uri = process.env.MONGODB_URI;
 
-  if (!uri) {
-    throw new Error(
-      "MONGODB_URI is missing.\n\n" +
-        "Set it in .env.local for local development, and in your hosting " +
-        "provider's environment variables (e.g. Vercel → Project Settings → " +
-        "Environment Variables) for production.\n\n" +
-        "Expected format:\n" +
-        "mongodb+srv://<username>:<password>@<cluster>/<database>?retryWrites=true&w=majority\n\n" +
-        "See the committed .env.example for the full list of required variables. " +
-        "Never commit real credentials."
-    );
-  }
+  validateMongoUri(uri);
+  assertRealMongoHost(uri);
 
-  const client = new MongoClient(uri);
-  const database = client.db(process.env.DB_NAME || "studiospace");
+  const client = new MongoClient(uri, {
+    serverSelectionTimeoutMS: 8000,
+  });
+  // Same shared default as lib/mongo.ts — previously this defaulted to
+  // "studiospace", so auth data could land in a DIFFERENT database than
+  // bookings when DB_NAME was not configured on Vercel.
+  const database = client.db(getDatabaseName());
 
   globalForMongo.studiospaceAuthMongo = { client, database };
   return globalForMongo.studiospaceAuthMongo;
@@ -82,13 +93,15 @@ export const auth = betterAuth({
     minPasswordLength: 6,
   },
 
-  socialProviders: {
-    google: {
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-      prompt: "select_account",
-    },
-  },
+  socialProviders: googleConfigured
+    ? {
+        google: {
+          clientId: process.env.GOOGLE_CLIENT_ID as string,
+          clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+          prompt: "select_account",
+        },
+      }
+    : {},
 
   user: {
     additionalFields: {},

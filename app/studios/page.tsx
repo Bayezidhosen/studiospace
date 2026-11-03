@@ -3,10 +3,12 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { io } from "next/cache";
 import { ArrowUpRight, MapPin, SearchX, Star } from "lucide-react";
 
 import { categories, studios as fallbackStudios, type Studio } from "@/lib/data/studios";
 import { getStudios } from "@/lib/mongo";
+import { isOptimizableImage } from "@/lib/image";
 
 export const metadata: Metadata = {
   title: "Explore Studios | StudioSpace",
@@ -31,6 +33,7 @@ function StudioCard({ studio }: { studio: Studio }) {
           alt={studio.name}
           fill
           sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+          unoptimized={!isOptimizableImage(studio.image)}
           className="object-cover transition duration-700 group-hover:scale-110"
         />
 
@@ -84,6 +87,13 @@ async function StudioResults({
   searchParamsParams: Promise<{ category?: string }>;
 }) {
   const { category } = await searchParamsParams;
+
+  /* Keep the MongoDB read strictly at request time: without io() the
+     prerender pass during `next build` tries to resolve this promise and
+     Atlas injection happens on the build machine (which baked the static
+     fallback into the shell and made builds flaky). */
+  await io();
+
   const studios = await getStudios();
 
   const activeQuery = category?.trim() || "";

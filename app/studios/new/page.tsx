@@ -1,30 +1,25 @@
 "use client";
 
 import Link from "next/link";
-import { Image, PenLine, Tag, LoaderCircle } from "lucide-react";
+import { Aperture, ArrowLeft, LoaderCircle, PenLine, Tag, UploadCloud } from "lucide-react";
 
 import { useRequireSession } from "@/lib/use-require-session";
+import StudioForm from "@/components/studio/studio-form";
 
-const steps = [
+const tips = [
   {
     step: "01",
     title: "Describe your space",
-    description:
-      "Add the studio name, category, location and what makes your space special for creators.",
     icon: PenLine,
   },
   {
     step: "02",
-    title: "Upload photos & amenities",
-    description:
-      "Show off the space with high-quality photos and list the equipment and amenities available.",
-    icon: Image,
+    title: "Add a cover photo & amenities",
+    icon: UploadCloud,
   },
   {
     step: "03",
     title: "Set pricing & publish",
-    description:
-      "Choose your hourly rate and security deposit, review the details and publish your listing.",
     icon: Tag,
   },
 ];
@@ -43,83 +38,64 @@ export default function AddNewStudioPage() {
 
   return (
     <main className="min-h-[85vh] bg-[#f5f5f0] px-4 py-12 text-[#171717]">
-      <div className="mx-auto grid max-w-6xl overflow-hidden rounded-3xl bg-white shadow-xl md:grid-cols-2">
+      <div className="mx-auto grid max-w-6xl overflow-hidden rounded-3xl bg-white shadow-xl md:grid-cols-[minmax(0,380px)_1fr]">
         {/* Left: welcome panel */}
-        <section className="relative hidden min-h-[650px] flex-col justify-between overflow-hidden bg-[#171717] p-12 text-white md:flex">
+        <section className="relative hidden min-h-[650px] flex-col justify-between overflow-hidden bg-[#171717] p-10 text-white md:flex">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(213,255,63,0.22),transparent_35%)]" />
 
           <div className="relative z-10">
-            <span className="rounded-full border border-white/20 px-4 py-2 text-xs uppercase tracking-[0.2em] text-[#d5ff3f]">
+            <Link href="/" className="flex items-center gap-2 text-xl font-bold">
+              <Aperture className="h-7 w-7 text-[#d5ff3f]" />
+              StudioSpace
+            </Link>
+
+            <span className="mt-8 inline-block rounded-full border border-white/20 px-4 py-2 text-xs uppercase tracking-[0.2em] text-[#d5ff3f]">
               Host on StudioSpace
             </span>
 
-            <h1 className="mt-6 max-w-md text-5xl font-semibold leading-tight">
+            <h1 className="mt-6 max-w-md text-4xl font-semibold leading-tight">
               Turn your space into a creator destination.
             </h1>
 
-            <p className="mt-6 max-w-sm leading-7 text-white/60">
-              Photography studios, podcast rooms, music suites — list your
-              space and welcome creators from day one.
-            </p>
-          </div>
-
-          <p className="relative z-10 text-sm text-white/40">
-            © 2026 StudioSpace. All rights reserved.
-          </p>
-        </section>
-
-        {/* Right: listing flow preview */}
-        <section className="flex items-center justify-center p-6 py-12 sm:p-12">
-          <div className="w-full max-w-md">
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-neutral-400">
-              Add New Studio
-            </p>
-
-            <h2 className="mt-3 text-3xl font-bold tracking-tight">
-              Studio onboarding is on its way
-            </h2>
-
-            <p className="mt-3 text-sm leading-6 text-neutral-500">
-              We&apos;re finalising the upload flow so you can publish your
-              first listing with confidence. Here&apos;s what it will look
-              like:
-            </p>
-
-            <ol className="mt-8 space-y-4">
-              {steps.map((item) => (
-                <li
-                  key={item.step}
-                  className="flex gap-4 rounded-2xl border border-neutral-200 p-4 transition-colors hover:border-neutral-900"
-                >
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#171717] text-[#d5ff3f]">
-                    <item.icon size={18} />
-                  </div>
-                  <div>
-                    <p className="flex items-center gap-2 text-sm font-bold">
-                      {item.title}
-                      <span className="text-xs font-black text-neutral-300">
-                        {item.step}
-                      </span>
-                    </p>
-                    <p className="mt-1 text-xs leading-5 text-neutral-500">
-                      {item.description}
-                    </p>
-                  </div>
+            <ol className="mt-10 space-y-4">
+              {tips.map((item) => (
+                <li key={item.step} className="flex items-center gap-3 text-sm text-white/70">
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/20 text-[#d5ff3f]">
+                    <item.icon size={15} />
+                  </span>
+                  {item.title}
                 </li>
               ))}
             </ol>
+          </div>
 
+          <p className="relative z-10 text-sm text-white/40">
+            Signed in as {user.email}
+          </p>
+        </section>
+
+        {/* Right: the real listing form */}
+        <section className="p-6 py-10 sm:p-12">
+          <div className="mb-8">
             <Link
-              href="/dashboard"
-              className="mt-8 flex w-full items-center justify-center rounded-xl bg-[#d5ff3f] px-5 py-4 text-sm font-bold text-[#171717] transition hover:bg-[#c6f02e]"
+              href="/dashboard/listings"
+              className="inline-flex items-center gap-2 text-sm font-semibold text-neutral-500 transition hover:text-black"
             >
-              Back to Dashboard
+              <ArrowLeft size={15} />
+              Back to my listings
             </Link>
 
-            <p className="mt-4 text-center text-xs text-neutral-400">
-              Signed in as {user.email}
+            <h2 className="mt-5 text-3xl font-bold tracking-tight">
+              List your studio
+            </h2>
+
+            <p className="mt-2 text-sm text-neutral-500">
+              Fill in the details below. Your listing goes live in the
+              explore page as soon as you publish.
             </p>
           </div>
+
+          <StudioForm mode="create" />
         </section>
       </div>
     </main>

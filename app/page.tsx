@@ -25,6 +25,7 @@ import {
   categories,
 } from "@/lib/data/studios";
 import type { Studio } from "@/lib/data/studios";
+import { isOptimizableImage } from "@/lib/image";
 
 const bookingSteps = [
   {
@@ -185,6 +186,7 @@ export default function Home() {
                   alt={studio.name}
                   fill
                   sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                  unoptimized={!isOptimizableImage(studio.image)}
                   className="object-cover transition duration-700 group-hover:scale-110"
                 />
 

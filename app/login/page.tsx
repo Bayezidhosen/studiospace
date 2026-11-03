@@ -23,7 +23,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  // const [googleLoading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -58,18 +58,16 @@ export default function LoginPage() {
 
   const handleGoogleLogin = async () => {
     try {
-      // setLoading(true);
-      setLoading(false);
-
+      /* Opens the Google OAuth flow; the browser is redirected away,
+         so this state only keeps the button disabled until navigation. */
+      setGoogleLoading(true);
       await signIn.social({
         provider: "google",
         callbackURL: "/",
       });
     } catch {
       toast.error("Google login failed. Please try again.");
-      // setLoading(false);
-    } finally {
-      setLoading(false);
+      setGoogleLoading(false);
     }
   };
 
@@ -126,10 +124,10 @@ export default function LoginPage() {
             <button
               type="button"
               onClick={handleGoogleLogin}
-              disabled={ loading}
+              disabled={googleLoading}
               className="mt-8 flex w-full items-center justify-center gap-3 rounded-xl border border-neutral-200 px-5 py-3.5 text-sm font-semibold transition hover:bg-neutral-50 disabled:cursor-not-allowed disabled:opacity-60"
             >
-              {loading ? (
+              {googleLoading ? (
                 <Loader2 className="h-5 w-5 animate-spin" />
               ) : (
                 <svg viewBox="0 0 48 48" className="h-5 w-5" aria-hidden="true">

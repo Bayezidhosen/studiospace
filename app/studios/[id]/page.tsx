@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { io } from "next/cache";
 import { notFound } from "next/navigation";
 import {
   ArrowLeft,
@@ -16,11 +17,14 @@ import {
 
 import BookButton from "@/components/studio/book-button";
 import { getStudioById, getStudioReviews } from "@/lib/mongo";
+import { isOptimizableImage } from "@/lib/image";
 
 type Params = { params: Promise<{ id: string }> };
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { id } = await params;
+  /* Request-time DB access only — see StudioDetails below. */
+  await io();
   const studio = await getStudioById(id);
 
   if (!studio) return {};
@@ -43,6 +47,11 @@ export default function StudioDetailPage({ params }: Params) {
 
 async function StudioDetails({ params }: Params) {
   const { id } = await params;
+
+  /* Suspends during the build-time prerender (static shell shows the
+     pulse fallback), so MongoDB is only ever reached on a real request. */
+  await io();
+
   const studio = await getStudioById(id);
   const reviews = studio ? await getStudioReviews(id) : [];
 
@@ -72,6 +81,7 @@ async function StudioDetails({ params }: Params) {
                 alt={studio.name}
                 fill
                 sizes="(min-width: 1024px) 60vw, 100vw"
+                unoptimized={!isOptimizableImage(studio.image)}
                 className="object-cover"
               />
 

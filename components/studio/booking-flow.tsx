@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import { type Studio } from "@/lib/data/studios";
 import { type Booking } from "@/lib/mongo";
 import BookingDetailsCard from "@/components/studio/booking-details-card";
+import { isOptimizableImage } from "@/lib/image";
 
 type Props = {
   open: boolean;
@@ -37,18 +38,9 @@ export default function BookingFlow({
   const [submitting, setSubmitting] = useState(false);
   const [booked, setBooked] = useState<Booking | null>(null);
 
-  useEffect(() => {
-    if (open) {
-      setStep("form");
-      setDate("");
-      setTime("10:00");
-      setHours(1);
-      setMessage("");
-      setSubmitting(false);
-      setBooked(null);
-    }
-  }, [open]);
-
+  /* No useEffect reset needed: the parent (BookButton) remounts this
+     component with a fresh key every time the dialog opens, so state
+     always starts clean — without cascading re-renders. */
   if (!open) return null;
 
   const hourlyRate = studio.price;
@@ -120,6 +112,7 @@ export default function BookingFlow({
             alt={studio.name}
             fill
             sizes="640px"
+            unoptimized={!isOptimizableImage(studio.image)}
             className="object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-black/10" />
